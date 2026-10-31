@@ -1,0 +1,13 @@
+{
+  "id": "safelight.devtools",
+  "name": "Developer Tools",
+  "version": "1.0.0",
+  "description": "In-app inspector: console, errors/warnings, system & WebGL info, localStorage editor and Electron DevTools controls. Disabled by default.",
+  "author": "Anthony Reimche",
+  "main": "dist/index.js",
+  "license": "GPL-3.0-only",
+  "categories": ["workflow"],
+  "keywords": ["developer", "devtools", "console", "debug", "pipeline", "variables"],
+  "repository": "anthonyreimche/Developer-Tools",
+  "minAppVersion": "3.2.0"
+}
