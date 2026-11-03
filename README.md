@@ -55,6 +55,6 @@ The look is core's Tailwind utilities, written out in `src/styles.ts` under
 the `sldt-` prefix: `tw("flex px-2 hover:bg-surface-3")` returns the
 prefixed classes, and the type refuses a name the sheet doesn't define.
 
-## License
+## Licence
 
 GPL-3.0-only with an attribution term (GPL v3 §7b), the same licence as Safelight; see LICENSE. Copyright (C) 2026 Anthony Reimche.
