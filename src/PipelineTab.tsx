@@ -105,16 +105,16 @@ function StageView({ row }: { row: Row<"stage"> }) {
     <>
       <div className={tw("flex items-baseline gap-2")}>
         <span className={tw("text-text-primary")}>{row.name}</span>
-        <span className={tw("font-code text-[10px] text-text-muted")}>{row.id}</span>
+        <span className={tw("font-code text-[11px] text-text-secondary")}>{row.id}</span>
       </div>
-      <div className={tw("flex flex-wrap gap-x-2.5 text-[10px] text-text-secondary")}>
+      <div className={tw("flex flex-wrap gap-x-2.5 text-[11px] text-text-secondary")}>
         {facts.map((fact) => (
           <span key={fact}>{fact}</span>
         ))}
       </div>
-      {row.note && <div className={tw("text-[10px] text-text-muted")}>{row.note}</div>}
+      {row.note && <div className={tw("text-[11px] text-text-secondary")}>{row.note}</div>}
       {row.floors.map((floor, i) => (
-        <div key={i} className={tw("font-code text-[10px] text-amber-400")}>{`found in GLSL: ${floor}`}</div>
+        <div key={i} className={tw("font-code text-[11px] text-amber-400")}>{`found in GLSL: ${floor}`}</div>
       ))}
     </>
   );
@@ -143,10 +143,10 @@ function OutputView({ row, screen }: { row: Row<"output">; screen: ScreenTarget 
     <>
       <div className={tw("flex items-baseline gap-2")}>
         <span className={tw("text-text-muted")}>Output</span>
-        <span className={cx(CHIP, tw("text-[10px]"))}>{row.mapped ? "mapped" : "clipped"}</span>
+        <span className={cx(CHIP, tw("text-[11px]"))}>{row.mapped ? "mapped" : "clipped"}</span>
       </div>
-      <div className={tw("text-[10px] text-text-muted")}>{row.detail}</div>
-      {row.mapped && <div className={tw("text-[10px] text-text-secondary")}>{`On this screen: ${target}`}</div>}
+      <div className={tw("text-[11px] text-text-secondary")}>{row.detail}</div>
+      {row.mapped && <div className={tw("text-[11px] text-text-secondary")}>{`On this screen: ${target}`}</div>}
     </>
   );
 }
@@ -155,16 +155,16 @@ function RowView({ row, screen }: { row: PipelineRow; screen: ScreenTarget }) {
   switch (row.kind) {
     case "core":
       return (
-        <div className={tw("text-text-muted")}>
+        <div className={tw("text-text-secondary")}>
           <span>{row.label}</span>
-          {row.note && <span className={tw("ml-2 text-[10px]")}>{row.note}</span>}
+          {row.note && <span className={tw("ml-2 text-[11px]")}>{row.note}</span>}
         </div>
       );
     case "stage":
       return <StageView row={row} />;
     case "convert":
       return (
-        <div className={tw("pl-3 font-code text-[10px] text-text-secondary")}>
+        <div className={tw("pl-3 font-code text-[11px] text-text-secondary")}>
           {row.elided ? `stays in ${row.to}` : `${row.from} → ${row.to}`}
         </div>
       );
@@ -237,7 +237,7 @@ export function PipelineView({
           <li key={i} className={tw("border-b border-border-subtle/50 px-2 py-1")}>
             <RowView row={head} screen={screen} />
             {under.length > 0 && (
-              <ul className={tw("mt-0.5 space-y-px pl-3 text-[10px]")}>
+              <ul className={tw("mt-0.5 space-y-px pl-3 text-[11px]")}>
                 {under.map((row, j) => (
                   <li key={j}>
                     <RowView row={row} screen={screen} />

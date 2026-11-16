@@ -29,6 +29,10 @@ const RED_400 = "oklch(70.4% 0.191 22.216)";
 const RED_500 = "oklch(63.7% 0.237 25.331)";
 const EMERALD_400 = "oklch(76.5% 0.177 163.223)";
 
+/** The failure and problem colours, for drawing the graph's edges and marks. */
+export const STATUS_RED = RED_400;
+export const STATUS_AMBER = AMBER_400;
+
 function utilities(t: UiTokens) {
   return {
     absolute: "position: absolute",
@@ -100,9 +104,12 @@ function utilities(t: UiTokens) {
     "py-2": `padding-block: ${sp(2)}`,
     "py-4": `padding-block: ${sp(4)}`,
     "pl-3": `padding-left: ${sp(3)}`,
+    "pl-6": `padding-left: ${sp(6)}`,
+    "pr-1": `padding-right: ${sp(1)}`,
     "pr-2": `padding-right: ${sp(2)}`,
 
     "overflow-auto": "overflow: auto",
+    "overflow-hidden": "overflow: hidden",
     "overflow-y-auto": "overflow-y: auto",
     truncate: "overflow: hidden; text-overflow: ellipsis; white-space: nowrap",
     "whitespace-pre-wrap": "white-space: pre-wrap",

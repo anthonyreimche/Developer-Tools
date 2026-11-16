@@ -27,6 +27,27 @@ The ⧉ button pops the panel out into its own window; Re-dock there puts it
 back. The console is captured only while the extension is enabled, and
 disabling it gives the console back untouched.
 
+## Dev module
+
+The **Dev** tab draws every installed extension as a band, the processing
+stages it registers as nodes in their phase columns (geometry, decode, noise
+reduction, scene-linear, tone map, display adjust, effects, output encode),
+and the links between them: the colour chain from core's image through each
+stage to display and export, inter-stage values, the resources core hands
+each stage, and, for the selected extension, its registrations with core.
+Each stage shows what the live develop view does with it: running, not built
+this session, left out, overflowed, quarantined or crashed. The live view can
+be in any window, popped-out Develop included; Dev reads the newest one.
+
+Drag to pan, wheel to zoom, double-click to fit, click to select and Esc to
+clear. The toolbar searches, shows every extension or only those with stages
+or problems, widens empty phases and collapses bands. Its panels are an
+Extensions list (with Reload for dev-folder extensions), an Inspector for the
+selection with each uniform's live value, and the Variables, Pipeline and
+Console views. Go to Dev has no default shortcut; bind one under Preferences
+▸ Shortcuts. On a Safelight without the live render and extension reads, Dev
+still draws the registry and the pipeline.
+
 **Preferences ▸ Developer Tools** points Safelight at a folder of built
 extensions to load them without installing them through GitHub. The loaded
 extensions appear under Extensions ▸ Dev.

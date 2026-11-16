@@ -1,6 +1,6 @@
 // The stylesheet that stands in for core's Tailwind utilities: core's values,
 // zero specificity, core's accessibility rules, and a rule behind every class
-// the panel renders.
+// the panel and the Dev module render.
 
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
@@ -8,7 +8,14 @@ import { DevToolsPanel, DevToolsWindow } from "../src/DevToolsPanel";
 import { clearLog, pushEntry } from "../src/log-capture";
 import { React, initRuntime } from "../src/rt";
 import { PREFIX, classOf, cx, devtoolsCss, tw } from "../src/styles";
-import { TOKENS, fakeApi } from "./support/fake-api";
+import { DevModule } from "../src/dev/DevModule";
+import { ConsolePanel } from "../src/dev/panels/TabPanels";
+import { ExtensionsPanel } from "../src/dev/panels/ExtensionsPanel";
+import { InspectorPanel } from "../src/dev/panels/InspectorPanel";
+import { stopLiveRelay } from "../src/dev/sources";
+import { DevStatusBar } from "../src/dev/StatusBar";
+import { devView, resetDevView } from "../src/dev/store";
+import { TOKENS, extensionInfo, fakeApi, liveStatus, stageOf } from "./support/fake-api";
 
 afterEach(() => {
   cleanup();
@@ -92,6 +99,67 @@ describe("devtoolsCss", () => {
     collect();
 
     expect(used.size).toBeGreaterThan(50);
+    const missing = [...used].filter((c) => !css.includes(`.${c}`));
+    expect(missing).toEqual([]);
+  });
+
+  it("has a rule for every class the Dev module and its panels render", async () => {
+    const rig = fakeApi({
+      stages: [
+        stageOf("core", "core.crop", { phase: "geometry", anchor: "geometry" }),
+        stageOf("a", "a.s", {
+          phase: "tone-map",
+          uniforms: [{ key: "amount", glslType: "float", default: 0 }],
+          passes: [{ iterations: { key: "amount", max: 4 } }],
+          textures: [{ key: "lut", kind: "lut" }],
+          produces: [{ name: "a_v", glslType: "float" }],
+          dormantWhen: { amount: 0 },
+        }),
+        stageOf("b", "b.s", { consumes: ["a_v", "gone_v"] }),
+      ],
+    });
+    initRuntime(rig.api);
+    resetDevView();
+    const used = new Set<string>();
+    const collect = () =>
+      document.querySelectorAll("[class]").forEach((el) => {
+        for (const c of el.classList) if (c.startsWith(PREFIX)) used.add(c);
+      });
+    const select = (id: string) => act(() => devView().getState().select({ kind: "node", id }));
+
+    render(
+      <>
+        <DevModule />
+        <DevStatusBar />
+        <ExtensionsPanel />
+        <InspectorPanel />
+        <ConsolePanel />
+      </>,
+    );
+    act(() => {
+      rig.extensions?.set([
+        extensionInfo("a", { source: "dev", failure: { reason: "threw", message: "boom" } }),
+        extensionInfo("b", { callbackFailures: 1 }),
+      ]);
+      rig.render?.live.set(liveStatus({ programStages: ["a.s"], dormant: ["core.crop"] }));
+      rig.render?.stageFailures.set({ "b.s": { log: "ERROR: 0:1", crashed: false } });
+      rig.render?.values.set("a.s", { amount: 0 });
+    });
+    collect();
+    for (const id of ["stage:a.s", "stage:b.s", "band:a", "core"]) {
+      select(id);
+      await act(async () => undefined);
+      collect();
+    }
+    act(() => devView().getState().select({ kind: "port", node: "stage:a.s", port: "uniforms" }));
+    collect();
+    const edge = document.querySelector("[data-edge]")?.getAttribute("data-edge");
+    if (edge) act(() => devView().getState().select({ kind: "edge", id: edge }));
+    fireEvent.click(screen.getByRole("button", { name: "All extensions" }));
+    collect();
+    stopLiveRelay();
+
+    expect(used.size).toBeGreaterThan(40);
     const missing = [...used].filter((c) => !css.includes(`.${c}`));
     expect(missing).toEqual([]);
   });

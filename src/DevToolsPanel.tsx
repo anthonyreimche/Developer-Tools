@@ -150,7 +150,8 @@ export function DevToolsWindow() {
 
 const ALL_LEVELS: LogLevel[] = ["log", "info", "warn", "error", "debug"];
 
-function ConsoleTab({ entries, issuesOnly = false }: { entries: LogEntry[]; issuesOnly?: boolean }) {
+/** The Console tab, or with `issuesOnly` the Issues tab, over `entries`. */
+export function ConsoleTab({ entries, issuesOnly = false }: { entries: LogEntry[]; issuesOnly?: boolean }) {
   const [filter, setFilter] = React.useState("");
   const [levels, setLevels] = React.useState<Set<LogLevel>>(new Set(ALL_LEVELS));
   const [autoscroll, setAutoscroll] = React.useState(true);
@@ -260,7 +261,7 @@ function ConsoleTab({ entries, issuesOnly = false }: { entries: LogEntry[]; issu
                     {e.parts.join(" ")}
                   </span>
                   {hasStack && isOpen && (
-                    <pre className={tw("mt-1 whitespace-pre-wrap break-words text-[10px] text-text-muted")}>{e.stack}</pre>
+                    <pre className={tw("mt-1 whitespace-pre-wrap break-words text-[11px] text-text-muted")}>{e.stack}</pre>
                   )}
                 </div>
               </div>
@@ -560,7 +561,7 @@ function StorageTab() {
                 onChange={(e) => setDraft(e.target.value)}
                 spellCheck={false}
                 className={tw(
-                  "min-h-0 flex-1 resize-none rounded bg-surface-2 p-2 font-code text-[10px] text-text-primary outline-none focus:bg-surface-3",
+                  "min-h-0 flex-1 resize-none rounded bg-surface-2 p-2 font-code text-[11px] text-text-primary outline-none focus:bg-surface-3",
                 )}
               />
               <div className={tw("mt-1.5 flex items-center justify-end gap-1.5")}>

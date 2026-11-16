@@ -1,8 +1,8 @@
 {
   "name": "safelight-developer-tools",
   "private": true,
-  "version": "1.0.1",
-  "description": "Developer Tools extension for Safelight: console, issues, system, storage, variables, pipeline and native inspector.",
+  "version": "1.1.0",
+  "description": "Developer Tools extension for Safelight: console, issues, system, storage, variables, pipeline and native inspector, and the Dev module graph.",
   "type": "module",
   "scripts": {
     "build": "vite build",

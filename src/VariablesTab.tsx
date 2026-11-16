@@ -207,7 +207,7 @@ function VariableDetail({
           )}
         </div>
         {draft === null ? (
-          <pre className={tw("max-h-64 overflow-auto rounded bg-surface-2 p-1.5 font-code text-[10px]")}>{shown}</pre>
+          <pre className={tw("max-h-64 overflow-auto rounded bg-surface-2 p-1.5 font-code text-[11px]")}>{shown}</pre>
         ) : (
           <textarea
             aria-label="New value (JSON)"
@@ -215,7 +215,7 @@ function VariableDetail({
             onChange={(e) => setDraft(e.target.value)}
             spellCheck={false}
             className={tw(
-              "h-40 w-full rounded border border-border-subtle bg-surface-2 p-1.5 font-code text-[10px] text-text-primary",
+              "h-40 w-full rounded border border-border-subtle bg-surface-2 p-1.5 font-code text-[11px] text-text-primary",
             )}
           />
         )}
