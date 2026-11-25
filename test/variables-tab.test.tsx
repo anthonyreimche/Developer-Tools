@@ -5,6 +5,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { React, initRuntime } from "../src/rt";
+import { classOf } from "../src/styles";
 import { UNAVAILABLE_TEXT } from "../src/Unavailable";
 import { VariablesTab } from "../src/VariablesTab";
 import { fakeApi, type Rig } from "./support/fake-api";
@@ -135,6 +136,27 @@ describe("VariablesTab", () => {
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
     expect(screen.queryByLabelText("New value (JSON)")).toBeNull();
     expect(screen.getByText(/"keep": true/)).toBeTruthy();
+  });
+
+  // #291: in a side rail (260–320 px) the 224 px list left the detail too
+  // little room, so it scrolled sideways floating and was clipped docked.
+  it("stacks the list above the detail in a narrow panel", () => {
+    rig().variables.scoped("map").register("map.overlays", { initial: {} });
+    renderTab();
+    const list = screen.getByRole("list", { name: "Variables" });
+    const row = list.parentElement;
+    expect(row?.parentElement?.classList).toContain(classOf("@container"));
+    expect(row?.classList).toContain(classOf("@max-lg:flex-col"));
+    expect(list.classList).toContain(classOf("@max-lg:w-full"));
+    expect(list.classList).toContain(classOf("@max-lg:border-b"));
+  });
+
+  it("wraps long extension ids in the detail instead of widening it", () => {
+    const reg = rig().variables;
+    reg.scoped("com.anthonyreimche.jpg-tone-match").register("tone.match", { initial: {} });
+    renderTab();
+    const dd = screen.getByText("com.anthonyreimche.jpg-tone-match (this window)", { selector: "dd" });
+    expect(dd.closest(`.${classOf("wrap-anywhere")}`)).not.toBeNull();
   });
 
   it("says the tab is unavailable when the host hands over no devtools reads", () => {

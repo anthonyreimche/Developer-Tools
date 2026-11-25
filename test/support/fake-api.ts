@@ -178,6 +178,8 @@ export interface Rig {
   registry: UseBoundStore<StoreApi<RegistryState>>;
   /** Every navigation.goTo module. */
   navigations: string[];
+  /** The module navigation.ownModule() answers: set it to pop this window out for one. */
+  own: { module: string | null };
   /** Undefined with `seams: false`. */
   extensions: FakeExtensions | undefined;
   render: FakeRender | undefined;
@@ -233,6 +235,7 @@ export function fakeApi({
   const calls: string[] = [];
   const rowRequests: ProcessVersion[] = [];
   const navigations: string[] = [];
+  const own: { module: string | null } = { module: null };
   const variables = fakeVariables();
 
   const pipeline = create<PipelineState>()(() => ({
@@ -317,7 +320,16 @@ export function fakeApi({
     ui: { tokens: TOKENS },
     stores: { create },
     registry: { use: (selector) => registry(selector) },
-    navigation: { goTo: (module) => void navigations.push(module) },
+    navigation: { goTo: (module) => void navigations.push(module), ownModule: () => own.module },
+    // A cursor theme that restyles the panning cursor, so a test sees it was asked for.
+    cursors: { resolve: (token) => (token === "panning" ? "move" : token) },
+    develop: {
+      framePoint: (el, clientX, clientY) => {
+        const box = el.getBoundingClientRect();
+        const scale = el instanceof HTMLElement && el.offsetWidth > 0 && box.width > 0 ? box.width / el.offsetWidth : 1;
+        return { x: (clientX - box.left) / scale, y: (clientY - box.top) / scale };
+      },
+    },
     dock: {
       togglePanel: (id) => {
         toggles.push(id);
@@ -346,6 +358,7 @@ export function fakeApi({
     variables,
     registry,
     navigations,
+    own,
     extensions,
     render,
   };

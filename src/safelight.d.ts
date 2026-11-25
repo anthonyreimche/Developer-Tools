@@ -552,7 +552,26 @@ export interface SafelightAPI {
   registry: {
     use<T>(selector: (s: RegistryState) => T): T;
   };
-  navigation: { goTo(module: string): void };
+  navigation: {
+    goTo(module: string): void;
+    /** The module this window was popped out for, or null in the main
+     *  window. Needs Safelight 3.2.7. */
+    ownModule(): string | null;
+  };
+  /** Cursor vocabulary: `resolve` turns a token id (built-in or one a cursor
+   *  theme has overridden) into a concrete CSS `cursor` value. An unknown token
+   *  is returned as-is. Non-reactive: read it at render. */
+  cursors: { resolve(token: string): string };
+  develop: {
+    /** The pointer in `el`'s layout px: the space an overlay's `rect`, the
+     *  mapping helpers and CSS left/top use. Interface scale zooms the page,
+     *  so clientX minus the element's left is off by the zoom. Needs Safelight
+     *  3.2.7. */
+    framePoint(el: Element, clientX: number, clientY: number): {
+      x: number;
+      y: number;
+    };
+  };
   dock: {
     togglePanel(id: string): void;
     /** Whether a panel is open in the current dock layout. Non-reactive. */

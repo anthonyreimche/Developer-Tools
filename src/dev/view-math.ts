@@ -28,20 +28,6 @@ export const MAX_ZOOM = 3;
 
 const clampZoom = (k: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, k));
 
-/** A pointer's position in the viewport element's own (layout) pixels.
- *  clientX and the bounding rect are visual pixels, which the UI-scale zoom on
- *  the body and display scaling make differ from layout pixels; the rect's
- *  width over offsetWidth is that ratio. */
-export function toLocal(
-  el: { getBoundingClientRect(): { left: number; top: number; width: number }; offsetWidth: number },
-  clientX: number,
-  clientY: number,
-): Point {
-  const rect = el.getBoundingClientRect();
-  const scale = el.offsetWidth > 0 && rect.width > 0 ? rect.width / el.offsetWidth : 1;
-  return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale };
-}
-
 /** Scale by `factor` about `p` (viewport pixels), so the graph point under it
  *  stays under it. */
 export function zoomAt(view: View, p: Point, factor: number): View {

@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 import { LANE_W, NARROW_LANE_W, layoutGraph, portKey, type Layout } from "../src/dev/layout";
 import { bandId, buildGraph, type Graph, type GraphInput } from "../src/dev/model";
-import { fitView, toLocal, zoomAt } from "../src/dev/view-math";
+import { fitView, zoomAt } from "../src/dev/view-math";
 import type { RegisteredProcessingStage } from "../src/safelight";
 import { emptyRegistry, stageOf } from "./support/fake-api";
 
@@ -200,16 +200,6 @@ describe("edge routing around nodes", () => {
 });
 
 describe("view maths", () => {
-  const el = (rect: { left: number; top: number; width: number; height: number }, offsetWidth: number) => ({
-    getBoundingClientRect: () => rect,
-    offsetWidth,
-  });
-
-  it("maps a pointer to the viewport's own pixels under a zoomed body", () => {
-    expect(toLocal(el({ left: 100, top: 50, width: 400, height: 300 }, 200), 300, 150)).toEqual({ x: 100, y: 50 });
-    expect(toLocal(el({ left: 0, top: 0, width: 400, height: 300 }, 400), 30, 40)).toEqual({ x: 30, y: 40 });
-  });
-
   it("zooms about the pointer, keeping the point under it still", () => {
     const view = { x: 10, y: 20, k: 1 };
     const next = zoomAt(view, { x: 110, y: 120 }, 2);

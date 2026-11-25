@@ -46,10 +46,9 @@ const WINDOW_ID = Math.random().toString(36).slice(2, 10);
 
 /** This window as another window's status bar names it. */
 export function windowLabel(): string {
-  const params = new URLSearchParams(window.location.search);
-  const detached = params.get("detached");
-  if (detached) return `the ${detached.charAt(0).toUpperCase()}${detached.slice(1)} window`;
-  if (params.get("devtools") === "1") return "the Developer Tools window";
+  const popped = api.navigation.ownModule();
+  if (popped) return `the ${popped.charAt(0).toUpperCase()}${popped.slice(1)} window`;
+  if (new URLSearchParams(window.location.search).get("devtools") === "1") return "the Developer Tools window";
   return "the main window";
 }
 

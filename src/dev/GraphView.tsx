@@ -8,7 +8,7 @@
 // so a pan re-renders none of the nodes. Dragging empty space pans and stops
 // when the pointer lifts; the wheel zooms about the pointer; a double-click on
 // empty space fits; Esc clears the selection. Pointer positions are read in
-// the untransformed viewport's own pixels (view-math toLocal).
+// the untransformed viewport's own pixels (api.develop.framePoint).
 
 import type { ComponentType, CSSProperties, KeyboardEvent, MouseEvent, PointerEvent } from "react";
 import { React, api } from "../rt";
@@ -30,7 +30,7 @@ import { extensionColour, tint, toneColour } from "./palette";
 import type { ExtensionState, Tone } from "./status";
 import { devView } from "./store";
 import { holdTextSelection } from "./hold-text-selection";
-import { centreOn, fitView, openingView, toLocal, wheelFactor, zoomAt, type Point, type View } from "./view-math";
+import { centreOn, fitView, openingView, wheelFactor, zoomAt, type Point, type View } from "./view-math";
 
 /** Elements that take their own clicks: panning starts anywhere else. */
 const HIT = "[data-hit], button, input";
@@ -91,7 +91,7 @@ export function GraphView({ layout, linked, selection }: ContentProps) {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       const s = devView().getState();
-      s.setView(zoomAt(s.view, toLocal(el, e.clientX, e.clientY), wheelFactor(e.deltaY, e.deltaMode)));
+      s.setView(zoomAt(s.view, api.develop.framePoint(el, e.clientX, e.clientY), wheelFactor(e.deltaY, e.deltaMode)));
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
@@ -111,7 +111,7 @@ export function GraphView({ layout, linked, selection }: ContentProps) {
     const el = e.currentTarget;
     drag.current = {
       pointer: e.pointerId,
-      start: toLocal(el, e.clientX, e.clientY),
+      start: api.develop.framePoint(el, e.clientX, e.clientY),
       view: devView().getState().view,
       moved: false,
     };
@@ -122,7 +122,7 @@ export function GraphView({ layout, linked, selection }: ContentProps) {
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d || e.pointerId !== d.pointer) return;
-    const p = toLocal(e.currentTarget, e.clientX, e.clientY);
+    const p = api.develop.framePoint(e.currentTarget, e.clientX, e.clientY);
     const dx = p.x - d.start.x;
     const dy = p.y - d.start.y;
     if (Math.abs(dx) + Math.abs(dy) > 2) d.moved = true;
@@ -155,7 +155,7 @@ export function GraphView({ layout, linked, selection }: ContentProps) {
       tabIndex={0}
       aria-label="Extension graph"
       className={tw("relative h-full w-full overflow-hidden outline-none")}
-      style={{ cursor: panning ? "grabbing" : undefined, touchAction: "none" }}
+      style={{ cursor: panning ? api.cursors.resolve("panning") : undefined, touchAction: "none" }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}

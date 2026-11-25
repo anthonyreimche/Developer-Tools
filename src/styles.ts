@@ -40,6 +40,7 @@ function utilities(t: UiTokens) {
     "inset-x-1.5": `inset-inline: ${sp(1.5)}`,
     "-bottom-px": "bottom: -1px",
 
+    "@container": "container-type: inline-size",
     block: "display: block",
     flex: "display: flex",
     grid: "display: grid",
@@ -75,6 +76,7 @@ function utilities(t: UiTokens) {
     "h-full": "height: 100%",
     "h-screen": "height: 100vh",
     "min-h-0": "min-height: 0",
+    "max-h-32": `max-height: ${sp(32)}`,
     "max-h-64": `max-height: ${sp(64)}`,
 
     "m-auto": "margin: auto",
@@ -115,6 +117,7 @@ function utilities(t: UiTokens) {
     "whitespace-pre-wrap": "white-space: pre-wrap",
     "break-all": "word-break: break-all",
     "break-words": "overflow-wrap: break-word",
+    "wrap-anywhere": "overflow-wrap: anywhere",
     "align-top": "vertical-align: top",
     "text-center": "text-align: center",
     "text-left": "text-align: left",
@@ -128,6 +131,7 @@ function utilities(t: UiTokens) {
     border: "border-style: solid; border-width: 1px",
     "border-b": "border-bottom-style: solid; border-bottom-width: 1px",
     "border-r": "border-right-style: solid; border-right-width: 1px",
+    "border-r-0": "border-right-width: 0",
     "border-t": "border-top-style: solid; border-top-width: 1px",
     "border-border": `border-color: ${t.border}`,
     "border-border-subtle": `border-color: ${t.borderSubtle}`,
@@ -181,7 +185,7 @@ function utilities(t: UiTokens) {
 }
 
 type Base = keyof ReturnType<typeof utilities>;
-type Variant = "group-hover" | "placeholder" | "focus" | "hover";
+type Variant = "group-hover" | "placeholder" | "focus" | "hover" | "@max-lg";
 
 /** The variants in use, in Tailwind's order: a later rule wins a tie. */
 const VARIANTS = [
@@ -195,6 +199,11 @@ const VARIANTS = [
   "hover:text-red-400",
   "hover:text-text-primary",
   "hover:text-text-secondary",
+  "@max-lg:flex-col",
+  "@max-lg:w-full",
+  "@max-lg:max-h-32",
+  "@max-lg:border-r-0",
+  "@max-lg:border-b",
 ] as const satisfies readonly `${Variant}:${Base}`[];
 
 export type Utility = Base | (typeof VARIANTS)[number];
@@ -231,6 +240,8 @@ function variantRule(name: (typeof VARIANTS)[number], decls: string): string {
   }
   if (name.startsWith("placeholder:")) return `:where(${c})::placeholder { ${decls}; }`;
   if (name.startsWith("focus:")) return `:where(${c}:focus) { ${decls}; }`;
+  // Tailwind's @lg container is 32rem; @max-lg applies below it.
+  if (name.startsWith("@max-lg:")) return `@container (width < 32rem) { :where(${c}) { ${decls}; } }`;
   return `@media (hover: hover) { :where(${c}:hover) { ${decls}; } }`;
 }
 

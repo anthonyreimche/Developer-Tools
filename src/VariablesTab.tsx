@@ -52,45 +52,53 @@ function VariablesView({ inspector, variables }: { inspector: VariableInspector;
       </div>
     );
 
+  // In a side rail there's no room for the list beside the detail: it goes on top.
   return (
-    <div className={tw("flex h-full min-h-0")}>
-      <ul aria-label="Variables" className={tw("w-56 shrink-0 overflow-y-auto border-r border-border-subtle")}>
-        {list.map((v) => {
-          const name = v.snapshot.name;
-          const problems = v.history.filter((h) => h.outcome !== "accepted").length;
-          const isCurrent = current.snapshot.name === name;
-          return (
-            <li key={name}>
-              <button
-                type="button"
-                onClick={() => setSelected(name)}
-                aria-current={isCurrent}
-                className={cx(
-                  tw("flex w-full flex-col px-2 py-1 text-left hover:bg-surface-3"),
-                  isCurrent ? tw("bg-surface-3 text-text-primary") : tw("text-text-secondary"),
-                )}
-              >
-                <span className={tw("flex w-full items-center gap-1")}>
-                  <span className={tw("min-w-0 flex-1 truncate font-code")}>{name}</span>
-                  <span className={tw("shrink-0 text-text-muted")}>
-                    rev {v.snapshot.revision.n} · {formatBytes(v.size)}
-                  </span>
-                  {problems > 0 && (
-                    <span
-                      aria-label={`${problems} refused or lost`}
-                      className={tw("shrink-0 rounded-full bg-amber-500/80 px-1 text-[9px] text-white")}
-                    >
-                      {problems}
-                    </span>
+    <div className={tw("@container h-full min-h-0")}>
+      <div className={tw("flex h-full min-h-0 @max-lg:flex-col")}>
+        <ul
+          aria-label="Variables"
+          className={tw(
+            "w-56 shrink-0 overflow-y-auto border-r border-border-subtle @max-lg:w-full @max-lg:max-h-32 @max-lg:border-r-0 @max-lg:border-b",
+          )}
+        >
+          {list.map((v) => {
+            const name = v.snapshot.name;
+            const problems = v.history.filter((h) => h.outcome !== "accepted").length;
+            const isCurrent = current.snapshot.name === name;
+            return (
+              <li key={name}>
+                <button
+                  type="button"
+                  onClick={() => setSelected(name)}
+                  aria-current={isCurrent}
+                  className={cx(
+                    tw("flex w-full flex-col px-2 py-1 text-left hover:bg-surface-3"),
+                    isCurrent ? tw("bg-surface-3 text-text-primary") : tw("text-text-secondary"),
                   )}
-                </span>
-                <span className={tw("block truncate text-text-muted")}>{writerName(inspector, v.snapshot.writer)}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <VariableDetail key={current.snapshot.name} v={current} inspector={inspector} variables={variables} />
+                >
+                  <span className={tw("flex w-full items-center gap-1")}>
+                    <span className={tw("min-w-0 flex-1 truncate font-code")}>{name}</span>
+                    <span className={tw("shrink-0 text-text-muted")}>
+                      rev {v.snapshot.revision.n} · {formatBytes(v.size)}
+                    </span>
+                    {problems > 0 && (
+                      <span
+                        aria-label={`${problems} refused or lost`}
+                        className={tw("shrink-0 rounded-full bg-amber-500/80 px-1 text-[9px] text-white")}
+                      >
+                        {problems}
+                      </span>
+                    )}
+                  </span>
+                  <span className={tw("block truncate text-text-muted")}>{writerName(inspector, v.snapshot.writer)}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <VariableDetail key={current.snapshot.name} v={current} inspector={inspector} variables={variables} />
+      </div>
     </div>
   );
 }
@@ -160,7 +168,7 @@ function VariableDetail({
   };
 
   return (
-    <div className={tw("flex min-w-0 flex-1 flex-col gap-2 overflow-y-auto p-2")}>
+    <div className={tw("flex min-h-0 min-w-0 flex-1 flex-col gap-2 overflow-y-auto p-2 wrap-anywhere")}>
       <dl className={tw("grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5")}>
         <dt className={TERM}>Name</dt>
         <dd className={tw("font-code")}>{s.name}</dd>

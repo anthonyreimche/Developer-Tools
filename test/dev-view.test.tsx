@@ -132,6 +132,16 @@ describe("DevModule", () => {
     expect(screen.getByTestId("dev-world").style.transform).toBe(`translate(${after.x}px, ${after.y}px) scale(${after.k})`);
   });
 
+  it("shows the app's panning cursor while a pan is held", () => {
+    mount();
+    const el = viewport();
+    expect(el.style.cursor).toBe("");
+    fireEvent.pointerDown(el, { clientX: 100, clientY: 100, button: 0, pointerId: 1 });
+    expect(el.style.cursor).toBe("move");
+    fireEvent.pointerUp(el, { clientX: 100, clientY: 100, pointerId: 1 });
+    expect(el.style.cursor).toBe("");
+  });
+
   it("selects no text while a pan is held, and lets selection go on release, cancel or unmount", () => {
     const selectionStarts = (): boolean => {
       const e = new Event("selectstart", { bubbles: true, cancelable: true });

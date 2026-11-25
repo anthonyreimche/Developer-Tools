@@ -53,6 +53,15 @@ describe("devtoolsCss", () => {
     expect(css).toContain(`:where(.${classOf("placeholder:text-text-muted")})::placeholder { color: var(--color-text-muted); }`);
   });
 
+  it("switches @max-lg utilities on below Tailwind's @lg container width", () => {
+    expect(css).toContain(`:where(.${classOf("@container")}) { container-type: inline-size; }`);
+    expect(css).toContain(
+      `@container (width < 32rem) { :where(.${classOf("@max-lg:flex-col")}) { flex-direction: column; } }`,
+    );
+    expect(css).toContain(`:where(.${classOf("wrap-anywhere")}) { overflow-wrap: anywhere; }`);
+    expect(css.indexOf(classOf("@max-lg:w-full"))).toBeGreaterThan(css.indexOf(`.${classOf("w-56")})`));
+  });
+
   it("puts every rule at zero specificity except core's accessibility overrides", () => {
     const plain = lines.filter((line) => !line.includes(":where(") && !line.startsWith("html.sl-"));
     expect(plain).toEqual([]);
