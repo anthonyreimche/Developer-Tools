@@ -310,6 +310,8 @@ src/dev/
   - Right rail: Inspector, Variables.
   - Bottom: Console.
 - Panels: `safelight.devtools.{extensions,inspector,variables,pipeline,console}`.
+  The four side-rail panels are `fill`, so two expanded in one rail share its
+  height (core 3.2.8; older cores stretch only the first).
 - Keybinding `safelight.devtools.go` "Go to Dev", category General, no
   default combo.
 - Version 1.0.1 → 1.1.0. minAppVersion stays 3.2.0, because the new seams

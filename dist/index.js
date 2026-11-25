@@ -2996,11 +2996,13 @@ function ji(e) {
 	}), e.registerPanel({
 		id: $.variables,
 		title: "Variables",
-		component: Xr
+		component: Xr,
+		fill: !0
 	}), e.registerPanel({
 		id: $.pipeline,
 		title: "Pipeline",
-		component: Zr
+		component: Zr,
+		fill: !0
 	}), e.registerPanel({
 		id: $.console,
 		title: "Console",

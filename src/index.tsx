@@ -59,8 +59,8 @@ function registerDevModule(host: SafelightAPI): void {
   });
   host.registerPanel({ id: DEV_PANELS.extensions, title: "Extensions", component: ExtensionsPanel, fill: true });
   host.registerPanel({ id: DEV_PANELS.inspector, title: "Inspector", component: InspectorPanel, fill: true });
-  host.registerPanel({ id: DEV_PANELS.variables, title: "Variables", component: VariablesPanel });
-  host.registerPanel({ id: DEV_PANELS.pipeline, title: "Pipeline", component: PipelinePanel });
+  host.registerPanel({ id: DEV_PANELS.variables, title: "Variables", component: VariablesPanel, fill: true });
+  host.registerPanel({ id: DEV_PANELS.pipeline, title: "Pipeline", component: PipelinePanel, fill: true });
   host.registerPanel({ id: DEV_PANELS.console, title: "Console", component: ConsolePanel, allowBottomDock: true });
   host.registerKeybinding({
     id: DEV_KEYBINDING_ID,

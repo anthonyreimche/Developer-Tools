@@ -125,6 +125,15 @@ describe("Dev module", () => {
     expect(rig.panels.every((p) => !("defaultDock" in p))).toBe(true);
   });
 
+  it("makes every side-rail panel fill, so two expanded in one rail share its height", () => {
+    const rig = fakeApi();
+    activate(rig.api);
+    const fills = rig.panels.filter((p) => p.fill).map((p) => p.id);
+    expect(fills.sort()).toEqual(
+      [DEV_PANELS.extensions, DEV_PANELS.inspector, DEV_PANELS.pipeline, DEV_PANELS.variables].sort(),
+    );
+  });
+
   it("registers Go to Dev without a default combo", () => {
     const rig = fakeApi();
     activate(rig.api);
